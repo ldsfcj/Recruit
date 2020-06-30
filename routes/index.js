@@ -65,5 +65,53 @@ router.post('/login', function (req, res) {
       });
     }
   })
-})
+});
+
+//更新用户信息的路由
+router.post('/update', function (req, res) {
+  //从请求的cookie中得到userid
+  const userid = req.cookies.userid;
+  //如果不存在，则直接返回一个提升信息
+  if (!userid) {
+     res.send({code:1, msg: '请先登录'});
+  } else {
+    // 存在， 更具userid更新对应的user文档数
+    //得到提交的用户数据
+    const user = req.body;
+    UserModel.findByIdAndUpdate({_id:userid}, user, function (err, oldUser) {
+      if (!oldUser) {
+        //通知浏览器删除userid cookie
+        res.clearCookie('userid');
+        //返回一个提示信息
+        res.send({code:1, msg: '请先登录'});
+      } else {
+        //准备一个返回的user数据对象
+        const {_id, username, type} = oldUser;
+        const data = Object.assign(user, {_id, username, type});
+        //返回
+        res.send({
+          code: 0,
+          data
+        })
+      }
+    })
+  }
+});
+
+// 获取用户信息的路由(根据cookie中的user_id)
+router.get('/user', function (req, res) {
+  //从请求的cookie中得到userid
+  const userid = req.cookies.userid;
+  if (!userid) {
+    res.send({code:1, msg: '请先登录'});
+  } else {
+    //根据userid查询对应的User
+    UserModel.findOne({_id: userid}, filter, function (err, user) {
+        res.send({
+          code: 0,
+          data: user
+        });
+    })
+  }
+});
 module.exports = router;
