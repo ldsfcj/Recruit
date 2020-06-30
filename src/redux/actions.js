@@ -5,16 +5,23 @@
  */
 import {
     AUTH_SUCCESS,
-    ERROR_MSG
+    ERROR_MSG,
+    RECEIVE_USER,
+    RESET_USER
 } from './action-types';
 import {
     reqRegister,
-    reqLogin
+    reqLogin,
+    reqUpdateUser
 } from '../api/index';
 
-const authSuccess = (user) => ({type: AUTH_SUCCESS, data:user});
+const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user});
 
 const errorMsg = (msg) => ({type:ERROR_MSG, data: msg});
+
+const receiveUser = (user) =>({type:RECEIVE_USER, data: user}); //接收用户的同步action
+
+const reset_user = (msg) =>({type:RESET_USER, data: msg}); //重置用户的同步action
 
 export const register = (user) =>{
     const {username, password, passwords, type} = user;
@@ -53,6 +60,19 @@ export const login = (user) =>{
             dispatch(authSuccess(result.data));
         } else {
             dispatch(errorMsg(result.msg));
+        }
+    }
+}
+
+//更新用户异步action
+export const updateUser = (user) =>{
+    return async dispatch => {
+        const response = await reqUpdateUser(user);
+        const result = response.data;
+        if (result.code ===0 ) { //更新成功 data
+            dispatch(receiveUser(result.data));
+        } else { //更新失败 msg
+            dispatch(reset_user(result.msg));
         }
     }
 }

@@ -7,6 +7,8 @@ import {
     TextareaItem
 } from "antd-mobile";
 import HeaderSelector from "../../components/header-selector/header-selector";
+import {Redirect} from "react-router-dom";
+import {updateUser} from "../../redux/actions";
 
 class SeekerInfo extends Component {
 
@@ -29,10 +31,15 @@ class SeekerInfo extends Component {
     }
 
     save = () =>{
-        console.log(this.state);
+        this.props.updateUser(this.state);
     }
 
     render() {
+        const {header, type} = this.props.user;
+        if (header) { //如果header有值，那么信息已经完善（简单的检查）
+            const path = (type === 'boss')? '/boss' : '/seeker';
+            return (<Redirect to={path}/>)
+        }
         return (
             <div>
                 <NavBar>Complete Seeker Information</NavBar>
@@ -47,6 +54,6 @@ class SeekerInfo extends Component {
 }
 
 export default connect(
-    state => ({}),
-    {}
+    state => ({user: state.user}),
+    {updateUser}
 )(SeekerInfo);

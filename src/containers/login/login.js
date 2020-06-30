@@ -15,7 +15,11 @@ import {
 } from "antd-mobile";
 import Logo from "../../components/logo/logo";
 
-class Register extends Component {
+import {connect} from "react-redux";
+import {Redirect} from "react-router-dom";
+import {login} from "../../redux/actions";
+
+class Login extends Component {
 
     state = {
         username:'',
@@ -23,7 +27,7 @@ class Register extends Component {
     }
 
     login = () =>{
-        console.log(this.state);
+        this.props.login(this.state);
     }
 
     handleChange = (name,val) =>{
@@ -38,12 +42,19 @@ class Register extends Component {
 
 
     render() {
+
+        const {msg, redirectTo} = this.props.user;
+        if (redirectTo) {
+            return <Redirect to={redirectTo}/>
+        }
+
         return (
             <div>
                 <NavBar>Melbourne Recruit</NavBar>
                 <Logo />
                 <WingBlank>
                     <List>
+                        {msg ? <div className='error-msg'>{msg}</div>: null}
                         <WhiteSpace />
                         <InputItem
                             placeholder="请输入用户名"
@@ -69,4 +80,9 @@ class Register extends Component {
     }
 }
 
-export default Register;
+// export default Register;
+
+export default connect(
+    state => ({user: state.user}),
+    {login}
+)(Login);

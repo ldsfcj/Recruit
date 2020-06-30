@@ -6,7 +6,9 @@ import {
     TextareaItem,
     Button
 } from "antd-mobile";
+import {Redirect} from "react-router-dom";
 import HeaderSelector from "../../components/header-selector/header-selector";
+import {updateUser} from "../../redux/actions";
 
 class BossInfo extends Component {
 
@@ -31,10 +33,15 @@ class BossInfo extends Component {
     }
 
     save = () =>{
-        console.log(this.state);
+        this.props.updateUser(this.state);
     }
 
     render() {
+        const {header, type} = this.props.user;
+        if (header) { //如果header有值，那么信息已经完善（简单的检查）
+            const path = (type === 'boss')? '/boss' : '/seeker';
+            return (<Redirect to={path}/>)
+        }
         return (
             <div>
                 <NavBar>Complete Boss Information</NavBar>
@@ -51,6 +58,6 @@ class BossInfo extends Component {
 }
 
 export default connect(
-    state => ({}),
-    {}
+    state => ({user: state.user}),
+    {updateUser}
 )(BossInfo);
