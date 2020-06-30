@@ -13,13 +13,14 @@ const initUser = {
     username: '',
     type: '',
     msg: '',
+    redirectTo:''
 }
 
 //产生user状态的reducer
 function user(state=initUser, action) {
     switch (action.type) {
         case AUTH_SUCCESS:
-            return {...action.data};
+            return {...action.data, redirectTo: getRedirectTo()};
         case ERROR_MSG:
             return {...state, msg:action.data};
         default:
@@ -29,4 +30,20 @@ function user(state=initUser, action) {
 
 export default combineReducers({
     user
-})
+});
+
+function getRedirectTo(type, header) {
+    let path = '';
+
+    if (type === 'boss') {
+        path = '/boss';
+    } else {
+        path = '/seeker';
+    }
+
+    if (!header) {
+        path += 'info';
+    }
+
+    return path;
+}
