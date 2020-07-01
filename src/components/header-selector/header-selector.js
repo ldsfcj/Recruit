@@ -25,7 +25,7 @@ class HeaderSelector extends Component {
         for (let i=0; i<20; i++){
             this.headerList.push({
                 text: 'header' + (i+1),
-                icon: require(`./images/header${i+1}.png`) //不能使用import
+                icon: require(`../../assets/images/header${i+1}.png`) //不能使用import
             });
         }
     }

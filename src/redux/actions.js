@@ -22,7 +22,7 @@ const errorMsg = (msg) => ({type:ERROR_MSG, data: msg});
 
 const receiveUser = (user) =>({type:RECEIVE_USER, data: user}); //接收用户的同步action
 
-const reset_user = (msg) =>({type:RESET_USER, data: msg}); //重置用户的同步action
+export const reset_user = (msg) =>({type:RESET_USER, data: msg}); //重置用户的同步action
 
 export const register = (user) =>{
     const {username, password, passwords, type} = user;
