@@ -32,6 +32,7 @@ class PersonalCenter extends Component {
         return (
             <div>
                 <Result
+                    className='personal-result-header'
                     imgUrl={require(`../../assets/images/${header}.png`)}
                     title={username}
                     message={company}

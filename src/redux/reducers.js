@@ -39,7 +39,7 @@ function user(state=initUser, action) {
     }
 }
 
-//产生userlist 状态的reducer
+//产生userList 状态的reducer
 function userList(state=initUserList, action) {
     switch (action.type) {
         case RECEIVE_USER_LIST:
