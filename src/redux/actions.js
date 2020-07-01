@@ -12,7 +12,8 @@ import {
 import {
     reqRegister,
     reqLogin,
-    reqUpdateUser
+    reqUpdateUser,
+    reqUserInfo
 } from '../api/index';
 
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user});
@@ -72,6 +73,20 @@ export const updateUser = (user) =>{
         if (result.code ===0 ) { //更新成功 data
             dispatch(receiveUser(result.data));
         } else { //更新失败 msg
+            dispatch(reset_user(result.msg));
+        }
+    }
+}
+
+//获取用户异步action，用于登陆后再次自动登录
+export const getUserInfo = () =>{
+    return async dispatch => {
+        const response = await reqUserInfo();
+        const result = response.data;
+        // console.log(response);
+        if (result.code === 0){
+            dispatch(receiveUser(result.data));
+        } else {
             dispatch(reset_user(result.msg));
         }
     }
