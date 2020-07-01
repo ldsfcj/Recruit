@@ -6,7 +6,7 @@ class Boss extends Component {
     render() {
         return (
             <div>
-                BOSS
+                <UserList />
             </div>
         );
     }

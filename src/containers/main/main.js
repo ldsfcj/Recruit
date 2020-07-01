@@ -16,7 +16,7 @@ import NotFound from "../../components/not-found/not-found";
 import NavFooter from "../../components/nav-footer/nav-footer";
 
 import {getRedirectTo} from '../../utils/index';
-import {getUserInfo} from '../../redux/actions'
+import {getUserInfo, getUserList} from '../../redux/actions'
 import {NavBar} from "antd-mobile";
 
 class Main extends Component {
@@ -123,7 +123,7 @@ class Main extends Component {
 
 export default connect(
     state =>({user: state.user}),
-    {getUserInfo}
+    {getUserInfo, getUserList}
 )(Main);
 
 

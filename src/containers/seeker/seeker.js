@@ -6,13 +6,13 @@ class Seeker extends Component {
     render() {
         return (
             <div>
-                Seeker
+                <UserList />
             </div>
         );
     }
 }
 
 export default connect(
-    state => ({}),
+    state => ({userList: state.userList}),
     {}
 )(Seeker);

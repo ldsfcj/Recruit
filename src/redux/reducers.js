@@ -9,7 +9,8 @@ import {
     AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
-    RESET_USER
+    RESET_USER,
+    RECEIVE_USER_LIST
 } from './action-types';
 
 const initUser = {
@@ -17,7 +18,9 @@ const initUser = {
     type: '',
     msg: '',
     redirectTo:''
-}
+};
+
+const initUserList = [];
 
 //产生user状态的reducer
 function user(state=initUser, action) {
@@ -36,6 +39,17 @@ function user(state=initUser, action) {
     }
 }
 
+//产生userlist 状态的reducer
+function userList(state=initUserList, action) {
+    switch (action.type) {
+        case RECEIVE_USER_LIST:
+            return action.data;
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
-    user
+    user,
+    userList
 });

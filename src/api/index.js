@@ -7,3 +7,5 @@ export const reqLogin = ({username, password}) => ajax('/login', {username, pass
 export const reqUpdateUser = (user) => ajax('/update', user, 'POST');
 
 export const reqUserInfo = () => ajax('/user','GET');
+
+export const reqUserList = () => ajax('/userlist',{type},'GET');
