@@ -8,7 +8,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: inherit; //包裹内容，内容多高就多高
+  height: inherit !important; //包裹内容，内容多高就多高
 }
 
 .wing-blank{
@@ -25,4 +25,13 @@
 
 .personal-result-header{
   margin-top: 50px;
+}
+
+#chat-page .chat-me .am-list-extra {
+  flex-basis: auto; /* 宽 度 包 裹 内 容 */
+}
+
+#chat-page .chat-me .am-list-content {
+  padding-right: 15px;
+  text-align: right;
 }

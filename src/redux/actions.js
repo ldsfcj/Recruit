@@ -3,20 +3,41 @@
 异步action
 同步action
  */
+import io from 'socket.io-client';
 import {
     AUTH_SUCCESS,
     ERROR_MSG,
     RECEIVE_USER,
     RESET_USER,
-    RECEIVE_USER_LIST
+    RECEIVE_USER_LIST,
+    RECEIVE_MSG_LIST,
+    RECEIVE_MSG
 } from './action-types';
 import {
     reqRegister,
     reqLogin,
     reqUpdateUser,
     reqUserInfo,
-    reqUserList
+    reqUserList,
+    reqMsgList,
+    reqReadMsg
 } from '../api/index';
+
+/*
+单例对象
+1. 创建对象之前：判断对象是否已经创建，只有没有创建时，才去创建
+2. 创建对象之后：保存对象
+ */
+
+function initIO() {
+    if (!io.socket) {
+        io.socket = io('ws://localhost:4000');
+
+        io.socket.on('receiveMsg', function (chatMsg) {
+            console.log(chatMsg);
+        })
+    }
+}
 
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data: user});
 
@@ -26,7 +47,11 @@ const receiveUser = (user) =>({type:RECEIVE_USER, data: user}); //接收用户�
 
 export const reset_user = (msg) =>({type:RESET_USER, data: msg}); //重置用户的同步action
 
-export const receive_user_list = (userList) =>({type:RECEIVE_USER_LIST, data: userList})
+export const receive_user_list = (userList) =>({type:RECEIVE_USER_LIST, data: userList});
+
+const receive_msg_list = ({users, chatMsgs}) =>({type:RECEIVE_MSG_LIST, data: {users, chatMsgs}});
+
+// const receive_msg = () =>({type:RECEIVE_MSG, data:});
 
 export const register = (user) =>{
     const {username, password, passwords, type} = user;
@@ -44,6 +69,7 @@ export const register = (user) =>{
         const response = await reqRegister({username, password, type});
         const result = response.data;
         if (result.code === 0) {
+            getMsgList(dispatch)
             dispatch(authSuccess(result.data));
         } else {
             dispatch(errorMsg(result.msg));
@@ -62,6 +88,7 @@ export const login = (user) =>{
         const response = await reqLogin(user);
         const result = response.data;
         if (result.code === 0) {
+            getMsgList(dispatch);
             dispatch(authSuccess(result.data));
         } else {
             dispatch(errorMsg(result.msg));
@@ -89,6 +116,7 @@ export const getUserInfo = () =>{
         const result = response.data;
         // console.log(response);
         if (result.code === 0) {
+            getMsgList(dispatch);
             dispatch(receiveUser(result.data));
         } else {
             dispatch(reset_user(result.msg));
@@ -105,5 +133,23 @@ export const getUserList = (type) =>{
             // console.log(result.data);
             dispatch(receive_user_list(result.data));
         }
+    }
+}
+
+// 不是action，异步获取消息列表数据
+async function getMsgList(dispatch) {
+    initIO();
+    const response = await reqMsgList();
+    const result = response.data;
+    if (result.code === 0) {
+        const {users, chatMsgs} = result.data
+        dispatch(receive_msg_list({users, chatMsgs}))
+    }
+}
+
+export const sendMsg = ({from, to, content}) => {
+    return dispatch => {
+        console.log('客户端向服务器发送消息',{from, to, content});
+        io.socket.emit('sendMsg', {from, to, content})
     }
 }

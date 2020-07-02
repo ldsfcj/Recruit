@@ -9,3 +9,7 @@ export const reqUpdateUser = (user) => ajax('/update', user, 'POST');
 export const reqUserInfo = () => ajax('/user','GET');
 
 export const reqUserList = (type) => ajax('/userlist',{type},'GET');
+
+export const reqMsgList = () => ajax('/msglist', 'GET');
+
+export const reqReadMsg = (from) => ajax('/readmsg', {from},'POST');
