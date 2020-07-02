@@ -11,7 +11,8 @@ import {
     RESET_USER,
     RECEIVE_USER_LIST,
     RECEIVE_MSG_LIST,
-    RECEIVE_MSG
+    RECEIVE_MSG,
+    MSG_READ
 } from './action-types';
 import {
     reqRegister,
@@ -54,6 +55,8 @@ export const receive_user_list = (userList) =>({type:RECEIVE_USER_LIST, data: us
 const receive_msg_list = ({users, chatMsgs}) =>({type:RECEIVE_MSG_LIST, data: {users, chatMsgs}});
 
 const receive_msg = (chatMsg) =>({type:RECEIVE_MSG, data: chatMsg});
+
+const msg_read = ({count, from, to}) =>({type: MSG_READ, data:{count, from, to}})
 
 export const register = (user) =>{
     const {username, password, passwords, type} = user;
@@ -153,5 +156,16 @@ export const sendMsg = ({from, to, content}) => {
     return dispatch => {
         console.log('客户端向服务器发送消息',{from, to, content});
         io.socket.emit('sendMsg', {from, to, content})
+    }
+}
+
+export const readMsg = (from, to) =>{
+    return async dispatch => {
+        const response = await reqReadMsg(targetId);
+        const result = response.data;
+        if (result.code === 0) {
+            const count = result.data;
+            dispatch(msg_read({count, from, to}));
+        }
     }
 }
